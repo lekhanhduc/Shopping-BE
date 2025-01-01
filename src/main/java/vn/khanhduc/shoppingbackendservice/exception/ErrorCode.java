@@ -14,6 +14,8 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID(400, "Refresh Token Invalid", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_EXISTED(404, "Product not existed", HttpStatus.NOT_FOUND),
     VERIFICATION_CODE_INVALID(400, "Verification Code Invalid", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_EXISTED(404, "Role not existed", HttpStatus.NOT_FOUND),
+    ROLE_EXISTED(400, "Role existed", HttpStatus.BAD_REQUEST),
     ;
     private final int code;
     private final String message;

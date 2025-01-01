@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.khanhduc.shoppingbackendservice.common.GenerateOtp;
 import vn.khanhduc.shoppingbackendservice.common.UserStatus;
+import vn.khanhduc.shoppingbackendservice.common.UserType;
 import vn.khanhduc.shoppingbackendservice.dto.request.UserCreationRequest;
 import vn.khanhduc.shoppingbackendservice.dto.response.UserCreationResponse;
 import vn.khanhduc.shoppingbackendservice.dto.response.UserProfileResponse;
 import vn.khanhduc.shoppingbackendservice.dto.response.VerifyOtpResponse;
+import vn.khanhduc.shoppingbackendservice.entity.Role;
 import vn.khanhduc.shoppingbackendservice.entity.User;
 import vn.khanhduc.shoppingbackendservice.exception.AppException;
 import vn.khanhduc.shoppingbackendservice.exception.ErrorCode;
@@ -20,8 +22,10 @@ import vn.khanhduc.shoppingbackendservice.mapper.UserMapper;
 import vn.khanhduc.shoppingbackendservice.repository.UserRepository;
 import vn.khanhduc.shoppingbackendservice.service.EmailService;
 import vn.khanhduc.shoppingbackendservice.service.RedisService;
+import vn.khanhduc.shoppingbackendservice.service.RoleService;
 import vn.khanhduc.shoppingbackendservice.service.UserService;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +33,7 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final RedisService redisService;
@@ -41,6 +46,10 @@ public class UserServiceImpl implements UserService {
         }
         User user = UserMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        Role role = roleService.findByName(UserType.USER);
+
+        user.setRoles(Set.of(role));
         userRepository.save(user);
 
         String otp = GenerateOtp.generate();

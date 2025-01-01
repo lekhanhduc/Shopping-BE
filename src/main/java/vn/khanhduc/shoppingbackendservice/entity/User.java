@@ -58,6 +58,9 @@ public class User extends AbstractEntity<Long> implements UserDetails {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Product> products;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Role> roles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

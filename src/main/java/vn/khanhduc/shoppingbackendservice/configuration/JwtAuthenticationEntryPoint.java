@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import vn.khanhduc.shoppingbackendservice.dto.http.ResponseData;
+import vn.khanhduc.shoppingbackendservice.dto.response.ResponseData;
 import vn.khanhduc.shoppingbackendservice.exception.ErrorCode;
 import java.io.IOException;
 

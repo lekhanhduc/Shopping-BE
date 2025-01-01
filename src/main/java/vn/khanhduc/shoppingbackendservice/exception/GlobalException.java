@@ -9,8 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import vn.khanhduc.shoppingbackendservice.dto.http.ErrorResponse;
-import vn.khanhduc.shoppingbackendservice.dto.http.ResponseData;
+import vn.khanhduc.shoppingbackendservice.dto.response.ErrorResponse;
+import vn.khanhduc.shoppingbackendservice.dto.response.ResponseData;
 import java.time.LocalDateTime;
 import java.util.List;
 

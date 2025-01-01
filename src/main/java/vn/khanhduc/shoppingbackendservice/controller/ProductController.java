@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.khanhduc.shoppingbackendservice.dto.request.ProductCreationRequest;
 import vn.khanhduc.shoppingbackendservice.dto.response.PageResponse;
 import vn.khanhduc.shoppingbackendservice.dto.response.ProductCreationResponse;
-import vn.khanhduc.shoppingbackendservice.dto.http.ResponseData;
+import vn.khanhduc.shoppingbackendservice.dto.response.ResponseData;
 import vn.khanhduc.shoppingbackendservice.dto.response.ProductDetailResponse;
 import vn.khanhduc.shoppingbackendservice.service.ProductService;
 

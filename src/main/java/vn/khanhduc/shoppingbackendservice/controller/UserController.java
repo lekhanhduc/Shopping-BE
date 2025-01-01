@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.khanhduc.shoppingbackendservice.dto.http.ResponseData;
+import vn.khanhduc.shoppingbackendservice.dto.response.ResponseData;
 import vn.khanhduc.shoppingbackendservice.dto.request.UserCreationRequest;
 import vn.khanhduc.shoppingbackendservice.dto.response.UserCreationResponse;
 import vn.khanhduc.shoppingbackendservice.dto.response.UserProfileResponse;
@@ -35,7 +35,7 @@ public class UserController {
         var result = userService.verifyUser(email, Integer.parseInt(secretCode));
 
         return ResponseData.<VerifyOtpResponse>builder()
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .message("Created Successfully")
                 .data(result)
                 .build();
@@ -46,7 +46,7 @@ public class UserController {
         var result = userService.getUserProfile();
 
         return ResponseData.<UserProfileResponse>builder()
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .message("User Profile")
                 .data(result)
                 .build();

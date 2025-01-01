@@ -1,4 +1,4 @@
-package vn.khanhduc.shoppingbackendservice.dto.http;
+package vn.khanhduc.shoppingbackendservice.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
