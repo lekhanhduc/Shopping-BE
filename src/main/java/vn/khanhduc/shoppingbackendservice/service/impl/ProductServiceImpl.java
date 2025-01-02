@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import vn.khanhduc.shoppingbackendservice.dto.request.ProductCreationRequest;
 import vn.khanhduc.shoppingbackendservice.dto.response.PageResponse;
@@ -56,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
 //    @Cacheable(value = "productsCache", key = "#page + '-' + #size")
+    @Transactional(readOnly = true, timeout = 10)
     public PageResponse<ProductCreationResponse> findAll(int page, int size) {
         log.info("Fetching data from the database");
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -84,6 +86,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<ProductDetailResponse> search(int page, int size, String[] products, String sortBy) {
         ProductBuilder productBuilder = new ProductBuilder();
         if(products != null) {

@@ -3,6 +3,7 @@ package vn.khanhduc.shoppingbackendservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.khanhduc.shoppingbackendservice.entity.Role;
 import vn.khanhduc.shoppingbackendservice.exception.AppException;
 import vn.khanhduc.shoppingbackendservice.exception.ErrorCode;
@@ -18,6 +19,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Role findByName(String name) {
         log.info("Find Role By Name");
         return roleRepository.findByName(name)

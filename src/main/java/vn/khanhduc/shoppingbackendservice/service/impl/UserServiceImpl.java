@@ -2,6 +2,7 @@ package vn.khanhduc.shoppingbackendservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.khanhduc.shoppingbackendservice.common.GenerateOtp;
 import vn.khanhduc.shoppingbackendservice.common.UserStatus;
 import vn.khanhduc.shoppingbackendservice.common.UserType;
+import vn.khanhduc.shoppingbackendservice.dto.event.EmailEvent;
 import vn.khanhduc.shoppingbackendservice.dto.request.UserCreationRequest;
 import vn.khanhduc.shoppingbackendservice.dto.response.UserCreationResponse;
 import vn.khanhduc.shoppingbackendservice.dto.response.UserProfileResponse;
@@ -20,10 +22,11 @@ import vn.khanhduc.shoppingbackendservice.exception.AppException;
 import vn.khanhduc.shoppingbackendservice.exception.ErrorCode;
 import vn.khanhduc.shoppingbackendservice.mapper.UserMapper;
 import vn.khanhduc.shoppingbackendservice.repository.UserRepository;
-import vn.khanhduc.shoppingbackendservice.service.EmailService;
 import vn.khanhduc.shoppingbackendservice.service.RedisService;
 import vn.khanhduc.shoppingbackendservice.service.RoleService;
 import vn.khanhduc.shoppingbackendservice.service.UserService;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -35,8 +38,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
     private final RedisService redisService;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -53,7 +56,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         String otp = GenerateOtp.generate();
-        emailService.emailVerification(user.getEmail(), user.getUsername(), otp);
+        Map<String, Object> data = new HashMap<>();
+        data.put("otp", otp);
+        data.put("verification_link", "http://localhost:8080/api/v1/users/confirm-email?email=" + user.getEmail() + "&secretCode=" + otp);
+        EmailEvent event = EmailEvent.builder()
+                .channel("Send Email")
+                .subject("Verification Email")
+                .recipient(user.getEmail())
+                .templateCode("verification")
+                .param(data)
+                .build();
+
+        rabbitTemplate.convertAndSend("emailQueue", event);
+
         redisService.saveOtp(user.getEmail(), otp);
 
         return UserMapper.toUserCreatedResponse(user);
